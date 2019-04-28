@@ -57,6 +57,17 @@ module.exports = {
     performance: {
         hints: false,
     },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendors',
+                    chunks: 'all'
+                }
+            }
+        }
+    },
     devServer: {
         // compress: true, // 비교확인
         clientLogLevel: 'error',
