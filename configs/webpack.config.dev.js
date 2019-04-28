@@ -2,6 +2,7 @@ const path = require("path")
 const process = require("process")
 const webpack = require("webpack")
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const LodashWebpackPlugin = require('lodash-webpack-plugin');
 const paths = require("./paths");
 
 module.exports = {
@@ -25,6 +26,7 @@ module.exports = {
                 loader: require.resolve("babel-loader"),
                 options: {
                     cacheDirectory: true,
+                    plugins:["lodash"]
                 },
             },
             {
@@ -50,6 +52,7 @@ module.exports = {
             template: paths.appHtml
         }),
         new webpack.HotModuleReplacementPlugin(),
+        new LodashWebpackPlugin(),
     ],
     performance: {
         hints: false,
