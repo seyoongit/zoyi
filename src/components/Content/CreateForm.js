@@ -1,90 +1,61 @@
 import React, { Component } from 'react';
+import { Field, reduxForm } from 'redux-form'
 import {
-    Fab,
     TextField,
     Input,
-    Zoom,
 } from "@material-ui/core";
-import { Create } from "@material-ui/icons";
-import { withStyles } from "@material-ui/core/styles";
 
-const styles = theme => ({
-    button: {
-        marginTop: theme.spacing.unit
-    },
-    submit: {
-        "&:hover": {
-            background: "rgba(0,250,0,0.3)"
-        }
-    }
-})
+const renderTextField = ({ label, input, meta: { touched, invalid, error }, ...custom }) => {
+    return (
+        <TextField
+        label={label}
+        placeholder={label}
+        error={touched && invalid}
+        helperText={touched && error}
+        {...input}
+        {...custom} />
+    )
+}
 
 class CreateForm extends Component {
-    state = {
-        open: false,
-        newRow: {}
-    }
-    onChangeFactory = col => event => {
-        const { schema } = this.props;
-        let value = schema[col] === "number"
-            ? Number(event.target.value)
-            : event.target.value
-        value = schema[col] === "array" 
-            ? value.split(/ +/)
-            : value
-        value = schema[col] === "string"
-            ? value.trim()
-            : value
-            
-        const newRow = Object.assign({}, {...this.state.newRow, [col]: value})
-        this.setState({ newRow });
-    }
-    isValidate() {
-        const { schema } = this.props;
-        for(let col in schema) {
-            const value = this.state.newRow[col]
-            if (value === undefined) return false
-            if (schema[col] === "number" && isNaN(value)) return false
-        }
-        return true
-    }
-    onSubmit = (event) => {
-        event.preventDefault()
-        const { createNewData, pushMessage } = this.props;
-        
-        if (!this.isValidate()) return pushMessage("잘못된 입력값입니다. 입력값을 확인해주세요.")
-        createNewData(this.state.newRow)
-    }
+    required = value => value || typeof value === 'number' 
+        ? undefined
+        : 'Required'
+    number = value => value && isNaN(Number(value)) 
+        ? 'Must be a number' 
+        : undefined
+    numbersSplitedBySpace = value => value && value.split(/ +/).some(part => isNaN(part)) 
+        ? "Must be a numbers splited by white space" 
+        : undefined
+    pass = () => undefined
+
     render() {
-        const { classes, schema } = this.props;
-        const { open } = this.state;
-        const textFields = Object.keys(schema).map(col => 
-            <TextField
-            key={col}
+        const { schema, handleSubmit, pristine, submitting } = this.props;
+        const textFields = Object.keys(schema).map(col => (
+            <Field  
+            name={col}
             label={col} 
-            onChange={this.onChangeFactory(col)} 
+            key={col}
+            component={renderTextField}
+            validate={[
+                this.required,
+                schema[col] === "number" ? this.number : this.pass,
+                schema[col] === "array" ? this.numbersSplitedBySpace : this.pass
+            ]}
             fullWidth
-            helperText={schema[col]==="array" ? "이 필드는 Array 타입입니다. 두개 이상의 입력값들은 띄어쓰기로 구분하세요." : null}/>
-        )
+            placeholder={schema[col]==="array" ? "이 필드는 Array 타입입니다. 두개 이상의 입력값들은 띄어쓰기로 구분하세요." : col} />
+        ))
+        
         return (
-            <>
-                <Fab
-                className={classes.button}
-                color="primary"
-                onClick={() => this.setState({ open: !this.state.open }) }>
-                    <Create></Create>
-                </Fab>
-                {this.state.open && 
-                    <Zoom in={open}>
-                        <form onSubmit={this.onSubmit}>
-                            {textFields}
-                            <Input type="submit" className={classes.submit} fullWidth />
-                        </form>
-                    </Zoom>
-                } 
-            </>
+            <form onSubmit={handleSubmit}>
+                {textFields}
+                <Input type="submit" fullWidth disabled={pristine||submitting} />
+            </form>
         );
     }
 }
 
-export default withStyles(styles)(CreateForm);
+export default reduxForm({
+    form: 'createData',
+})(CreateForm);
+

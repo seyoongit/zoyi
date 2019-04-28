@@ -57,7 +57,7 @@ module.exports = {
     devServer: {
         // compress: true, // 비교확인
         clientLogLevel: 'error',
-        quiet: true,
+        noInfo: true,
         contentBase: paths.appPublic,
         hot: true,
         // inline: true,

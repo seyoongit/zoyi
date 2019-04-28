@@ -13,6 +13,7 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.2",
     "redux": "^4.0.1",
+    "redux-form": "^8.2.0",
     "redux-thunk": "^2.3.0",
     "webpack": "^4.30.0"
   },

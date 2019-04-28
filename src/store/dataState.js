@@ -40,7 +40,6 @@ export default function reducer(state = defaultState, action = {}) {
 
 
 // Action 생성자
-// import data from "./__mockupData__";
 export function fetchData(url) {
   return async dispatch => {
     try {
