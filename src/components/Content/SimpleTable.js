@@ -93,8 +93,7 @@ class SimpleTable extends Component {
     render() {
         const { classes, dataState, query } = this.props;
         const { sortColumn, isAscending } = this.state;
-        const data = this.getSortedData(dataState.data, sortColumn, isAscending )
-        .slice(0, dataState.howmanyDisplay)
+        const data = this.getSortedData(dataState.data.slice(0, dataState.howmanyDisplay), sortColumn, isAscending )
         .filter(row => {
             if (query === "") return true
             for (let col in row) {
