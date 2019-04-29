@@ -7,7 +7,7 @@ class CreateTemplate extends Component {
     state = {
         open: false,
     }
-    processNewRow(row) {
+    postProcessNewData(row) {
         const { schema } = this.props;
         for (let col in row) {
             row[col] = schema[col] === "number"
@@ -22,11 +22,10 @@ class CreateTemplate extends Component {
         }
     }
     handleSubmit = (newRow) => {
-        const { createNewData, pushMessage } = this.props;
-
-        this.processNewRow(newRow)
-        createNewData(newRow)
-        pushMessage("새로운 데이터 추가 완료.")
+        this.postProcessNewData(newRow);
+        this.props.createNewData(newRow);
+        this.props.pushMessage("새로운 데이터 추가 완료.");
+        this.setState({ open: !this.state.open});
     }
     render() {
         const { schema } = this.props;

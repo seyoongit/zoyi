@@ -5,13 +5,10 @@ import SimpleTable from "./SimpleTable";
 import CreateTemplate from "./CreateTemplate";
 import { DataStateActions, ModalActions } from "store/actionCreators";
 
-// 새로운 데이터를 추가하고 난뒤 CreateForm의 state를 다시 초기화 하거나 아니면  CreateTemplate 자체를 리렌더링해서 초기화 해줘야 하는데
-// 여기서는 CreateForm에 key로 준값을 +1 해서 다시 리렌더링 하는 방식을 선택했습니다.
-let __key_to_rerender_form__ = 0 
-
 class Content extends Component {
     componentDidMount() {
-        DataStateActions.fetchData("https://restcountries.eu/rest/v2/all?fields=alpha2Code;capital;name;region;callingCodes");
+        const url = "https://restcountries.eu/rest/v2/all?fields=alpha2Code;capital;name;region;callingCodes";
+        DataStateActions.fetchData(url);
     }
     render() {
         const { dataState, search } = this.props;
@@ -32,8 +29,7 @@ class Content extends Component {
                 <Grid item xs={10}>
                     <CreateTemplate
                     schema={schema}
-                    createNewData={newRow => { DataStateActions.createNewData(newRow); __key_to_rerender_form__+=1; }}
-                    key={__key_to_rerender_form__}
+                    createNewData={DataStateActions.createNewData}
                     pushMessage={ModalActions.pushMessage}/>
                     <SimpleTable
                     dataState={dataState}

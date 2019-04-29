@@ -45,7 +45,6 @@ class CreateForm extends Component {
             fullWidth
             placeholder={schema[col]==="array" ? "이 필드는 Array 타입입니다. 두개 이상의 입력값들은 띄어쓰기로 구분하세요." : col} />
         ))
-        
         return (
             <form onSubmit={handleSubmit}>
                 {textFields}
