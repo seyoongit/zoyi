@@ -21,13 +21,3 @@ $ yarn start
 ###### material-ui
 
 ###### webpack
-
->하하
->> dasd
-
-sdadasd
-
-~~~
-const javascript = dasd
-~~~
-
